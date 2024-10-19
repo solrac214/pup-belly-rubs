@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Belly Rub Button with Custom Webhook</title>
+  <title>Belly Rub Button with Animated Petting Hand Emoji</title>
   <style>
     body {
       text-align: center;
@@ -28,6 +28,23 @@
     label {
       font-size: 16px;
     }
+    /* Styles for the animated petting hand emoji */
+    #pettingHand {
+      margin: 20px auto;
+      font-size: 80px;
+      animation: pettingAnimation 1s infinite;
+      display: none; /* Hidden by default */
+    }
+    @keyframes pettingAnimation {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0); }
+    }
+    /* Disabled button style */
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
@@ -42,20 +59,27 @@
   <!-- Belly Rub Button -->
   <button id="bellyRubButton">🐶 Belly Rub</button>
   
+  <!-- Animated Petting Hand Emoji -->
+  <div id="pettingHand">🤚</div>
+  
   <!-- Message Display -->
-  <p id="message"></p>
+  <p id="message">The puppy is ready for more pets.</p>
 
   <script>
     document.getElementById('bellyRubButton').addEventListener('click', function () {
       const messageElement = document.getElementById('message');
       const webhookId = document.getElementById('webhookId').value.trim();
-      
+      const bellyRubButton = document.getElementById('bellyRubButton');
+      const pettingHand = document.getElementById('pettingHand');
+
       if (!webhookId) {
         messageElement.textContent = '⚠️ Please enter a webhook ID.';
         return;
       }
 
       messageElement.textContent = 'Giving the puppy a belly rub...';
+      bellyRubButton.disabled = true; // Disable the button
+      pettingHand.style.display = 'block'; // Show the petting hand animation
 
       // Construct the webhook URL using the webhook ID from the input
       const webhookUrl = `https://webhook.xtoys.app/${encodeURIComponent(webhookId)}?action=slowpet`;
@@ -66,12 +90,19 @@
       })
       .then(() => {
         console.log('Webhook sent successfully');
-        messageElement.textContent = '🐾 The puppy is happy!';
+        // Message will update after the animation
       })
       .catch((error) => {
         console.error('Error:', error);
         messageElement.textContent = '⚠️ Error sending the belly rub.';
       });
+
+      // After 10 seconds, hide the petting hand and re-enable the button
+      setTimeout(() => {
+        pettingHand.style.display = 'none'; // Hide the petting hand animation
+        bellyRubButton.disabled = false; // Re-enable the button
+        messageElement.textContent = 'The puppy is ready for more pets.';
+      }, 10000); // 10000 milliseconds = 10 seconds
     });
   </script>
 </body>
