@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Belly Rub Button</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      margin-top: 50px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Give the Puppy a Belly Rub!</h1>
+  <button id="bellyRubButton">🐶 Belly Rub</button>
+  <p id="message"></p>
+
+  <script>
+    document.getElementById('bellyRubButton').addEventListener('click', function () {
+      const messageElement = document.getElementById('message');
+      messageElement.textContent = 'Giving the puppy a belly rub...';
+
+      fetch('https://webhook.xtoys.app/WgCuJZ5WoHyX?action=slowpet', {
+        method: 'GET',
+        mode: 'no-cors' // This allows the request without CORS preflight
+      })
+      .then(() => {
+        console.log('Webhook sent successfully');
+        messageElement.textContent = '🐾 The puppy is happy!';
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        messageElement.textContent = '⚠️ Error sending the belly rub.';
+      });
+    });
+  </script>
+</body>
+</html>
