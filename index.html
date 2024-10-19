@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Belly Rub Button</title>
+  <title>Belly Rub Button with Custom Webhook</title>
   <style>
     body {
       text-align: center;
@@ -19,21 +19,50 @@
       font-size: 16px;
       color: #333;
     }
+    #webhookId {
+      width: 300px;
+      padding: 8px;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    label {
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
   <h1>Give the Puppy a Belly Rub!</h1>
+  
+  <!-- Webhook ID Input -->
+  <div>
+    <label for="webhookId">Webhook ID:</label><br>
+    <input type="text" id="webhookId" value="WgCuJZ5WoHyX" />
+  </div>
+  
+  <!-- Belly Rub Button -->
   <button id="bellyRubButton">🐶 Belly Rub</button>
+  
+  <!-- Message Display -->
   <p id="message"></p>
 
   <script>
     document.getElementById('bellyRubButton').addEventListener('click', function () {
       const messageElement = document.getElementById('message');
+      const webhookId = document.getElementById('webhookId').value.trim();
+      
+      if (!webhookId) {
+        messageElement.textContent = '⚠️ Please enter a webhook ID.';
+        return;
+      }
+
       messageElement.textContent = 'Giving the puppy a belly rub...';
 
-      fetch('https://webhook.xtoys.app/WgCuJZ5WoHyX?action=slowpet', {
+      // Construct the webhook URL using the webhook ID from the input
+      const webhookUrl = `https://webhook.xtoys.app/${encodeURIComponent(webhookId)}?action=slowpet`;
+
+      fetch(webhookUrl, {
         method: 'GET',
-        mode: 'no-cors' // This allows the request without CORS preflight
+        mode: 'no-cors' // Allows the request without CORS preflight
       })
       .then(() => {
         console.log('Webhook sent successfully');
