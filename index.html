@@ -2,17 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Belly Rub Button with Explanation</title>
+  <title>Belly Rub Button with Navy Blue Theme</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive Meta Tag -->
   <style>
+    /* Base Styles */
     body {
       text-align: center;
       font-family: Arial, sans-serif;
       margin: 20px; /* Adjusted for mobile spacing */
+      background-color: #001f3f; /* Navy Blue Background */
+      color: #FFFFFF; /* White text for contrast */
     }
     h1 {
       font-size: 24px;
+      color: #FFD700; /* Gold color for headings */
     }
+    /* Button Styles */
     button {
       padding: 15px 30px;
       font-size: 18px;
@@ -20,23 +25,40 @@
       width: 80%;
       max-width: 300px;
       margin: 10px auto;
+      background-color: #FFD700; /* Gold background */
+      color: #001f3f; /* Navy text */
+      border: none;
+      border-radius: 5px;
     }
-    #message {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #333;
+    button:hover {
+      background-color: #e6c200; /* Slightly darker gold on hover */
     }
+    button:disabled {
+      background-color: #cccccc; /* Greyed out when disabled */
+      color: #666666;
+      cursor: not-allowed;
+    }
+    /* Input and Label Styles */
     #webhookId {
       width: 80%;
       max-width: 300px;
       padding: 8px;
       font-size: 16px;
       margin-bottom: 20px;
+      border: 1px solid #CCCCCC;
+      border-radius: 5px;
     }
     label {
       font-size: 16px;
+      color: #FFFFFF; /* White text for labels */
     }
-    /* Styles for the animated petting hand emoji */
+    /* Message Styles */
+    #message {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #FFFFFF; /* White text for messages */
+    }
+    /* Animated Petting Hand Emoji */
     #pettingHand {
       margin: 20px auto;
       font-size: 80px;
@@ -48,25 +70,31 @@
       50% { transform: translateY(-20px); }
       100% { transform: translateY(0); }
     }
-    /* Disabled button style */
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-    /* "What's this?" section */
+    /* "What's this?" Section */
     #whatsThis {
       text-align: left;
       margin: 20px auto;
       width: 90%;
       max-width: 500px;
+      background-color: #002f5f; /* Slightly lighter navy for contrast */
+      padding: 15px;
+      border-radius: 5px;
     }
     #whatsThis h2 {
       font-size: 20px;
       margin-bottom: 10px;
+      color: #FFD700; /* Gold color for subheadings */
     }
     #whatsThis p {
       font-size: 16px;
       line-height: 1.5;
+      color: #FFFFFF; /* White text for content */
+    }
+    /* Input Focus Styles */
+    #webhookId:focus {
+      outline: none;
+      border-color: #FFD700; /* Gold border on focus */
+      box-shadow: 0 0 5px #FFD700;
     }
   </style>
 </head>
