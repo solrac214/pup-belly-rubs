@@ -34,7 +34,7 @@
       background-color: #e6c200; /* Slightly darker gold on hover */
     }
     button:disabled {
-      background-color: #cccccc; /* Greyed out when disabled */
+      background-color: #CCCCCC; /* Greyed out when disabled */
       color: #666666;
       cursor: not-allowed;
     }
@@ -108,7 +108,7 @@
   </div>
   
   <!-- Belly Rub Button -->
-  <button id="bellyRubButton">Give the 🐶 a Belly Rub!</button>
+  <button id="bellyRubButton">🐶 Belly Rub</button>
   
   <!-- Animated Petting Hand Emoji -->
   <div id="pettingHand">🤚</div>
@@ -146,17 +146,36 @@
       // Construct the webhook URL using the webhook ID from the input
       const webhookUrl = `https://webhook.xtoys.app/${encodeURIComponent(webhookId)}?action=slowpet`;
 
+      // Send request to the original webhook
       fetch(webhookUrl, {
         method: 'GET',
         mode: 'no-cors' // Allows the request without CORS preflight
       })
       .then(() => {
         console.log('Webhook sent successfully');
-        // Message will update after the animation
       })
       .catch((error) => {
         console.error('Error:', error);
         messageElement.textContent = '⚠️ Error sending the belly rub.';
+      });
+
+      // Send request to the IFTTT webhook
+      fetch('https://maker.ifttt.com/trigger/rubs/json/with/key/jCQEgSfrCJzO33m0SoRGc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ value1: 'Belly rub given!' })
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log('IFTTT webhook triggered successfully');
+        } else {
+          console.error('Error triggering IFTTT webhook:', response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error('Error triggering IFTTT webhook:', error);
       });
 
       // After 10 seconds, hide the petting hand and re-enable the button
