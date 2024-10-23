@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Belly Rub Button</title>
+  <title>Belly Rub Button</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Responsive Meta Tag -->
   <style>
     /* Base Styles */
@@ -39,9 +39,9 @@
       cursor: not-allowed;
     }
     /* Input and Label Styles */
-    #webhookId {
+    #webhookUrl, #customMessage {
       width: 80%;
-      max-width: 300px;
+      max-width: 500px;
       padding: 8px;
       font-size: 16px;
       margin-bottom: 20px;
@@ -91,7 +91,7 @@
       color: #FFFFFF; /* White text for content */
     }
     /* Input Focus Styles */
-    #webhookId:focus {
+    #webhookUrl:focus, #customMessage:focus {
       outline: none;
       border-color: #FFD700; /* Gold border on focus */
       box-shadow: 0 0 5px #FFD700;
@@ -99,12 +99,18 @@
   </style>
 </head>
 <body>
-  <h1>Give the Puppy a Belly Rub!</h1>
+  <h1>Belly Rub Button</h1>
   
-  <!-- Webhook ID Input -->
+  <!-- Webhook URL Input -->
   <div>
-    <label for="webhookId">Webhook ID:</label><br>
-    <input type="text" id="webhookId" value="NQwQCSocbqo5" />
+    <label for="webhookUrl">Webhook URL:</label><br>
+    <input type="text" id="webhookUrl" value="https://pet.solrac214.com/pet" />
+  </div>
+
+  <!-- Message Input -->
+  <div>
+    <label for="customMessage">Message (optional):</label><br>
+    <textarea id="customMessage" rows="3" placeholder="Enter your message here..."></textarea>
   </div>
   
   <!-- Belly Rub Button -->
@@ -120,63 +126,59 @@
   <div id="whatsThis">
     <h2>What's this?</h2>
     <p>
-      When you click the "Belly Rub" button, it activates a haptic device on the dog that simulates the feeling of belly rubs for 10 seconds. It's like giving the puppy a virtual belly rub from anywhere!
+      When you click the "Belly Rub" button, it sends a request to the specified webhook URL to activate the belly rub action. The default URL is already set, but you can change it if needed.
     </p>
     <p>
-      The <strong>Webhook ID</strong> is needed to connect to the dog's haptic device. It tells the system which device to send the belly rub signal to. If you have your own device, you can enter your Webhook ID here.
+      You can also add a custom message that will be sent along with the belly rub request.
     </p>
   </div>
 
   <script>
     document.getElementById('bellyRubButton').addEventListener('click', function () {
       const messageElement = document.getElementById('message');
-      const webhookId = document.getElementById('webhookId').value.trim();
+      const webhookUrlInput = document.getElementById('webhookUrl');
+      const webhookUrl = webhookUrlInput.value.trim();
+      const customMessageInput = document.getElementById('customMessage');
+      let customMessage = customMessageInput.value.trim();
       const bellyRubButton = document.getElementById('bellyRubButton');
       const pettingHand = document.getElementById('pettingHand');
 
-      if (!webhookId) {
-        messageElement.textContent = '⚠️ Please enter a webhook ID.';
+      if (!webhookUrl) {
+        messageElement.textContent = '⚠️ Please enter a webhook URL.';
         return;
       }
+
+      // Sanitize the custom message
+      customMessage = sanitizeInput(customMessage);
 
       messageElement.textContent = 'Giving the puppy a belly rub...';
       bellyRubButton.disabled = true; // Disable the button
       pettingHand.style.display = 'block'; // Show the petting hand animation
 
-      // Construct the webhook URL using the webhook ID from the input
-      const webhookUrl = `https://webhook.xtoys.app/${encodeURIComponent(webhookId)}?action=slowpet`;
-
-      // Send request to the original webhook
-      fetch(webhookUrl, {
-        method: 'GET',
-        mode: 'no-cors' // Allows the request without CORS preflight
-      })
-      .then(() => {
-        console.log('Webhook sent successfully');
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        messageElement.textContent = '⚠️ Error sending the belly rub.';
-      });
-
-      // Send request to the IFTTT webhook
-      fetch('https://maker.ifttt.com/trigger/rubs/json/with/key/jCQEgSfrCJzO33m0SoRGc', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ value1: 'Belly rub given!' })
-      })
-      .then(response => {
-        if (response.ok) {
-          console.log('IFTTT webhook triggered successfully');
-        } else {
-          console.error('Error triggering IFTTT webhook:', response.statusText);
+      // Construct the webhook URL with the message query parameter
+      try {
+        const url = new URL(webhookUrl);
+        if (customMessage) {
+          url.searchParams.append('message', customMessage);
         }
-      })
-      .catch((error) => {
-        console.error('Error triggering IFTTT webhook:', error);
-      });
+        const finalUrl = url.toString();
+
+        // Send request to the specified webhook URL
+        fetch(finalUrl, {
+          method: 'GET',
+          mode: 'no-cors' // Allows the request without CORS preflight
+        })
+        .then(() => {
+          console.log('Webhook request sent successfully');
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          messageElement.textContent = '⚠️ Error sending the belly rub request.';
+        });
+      } catch (error) {
+        console.error('Invalid webhook URL:', error);
+        messageElement.textContent = '⚠️ Invalid webhook URL.';
+      }
 
       // After 10 seconds, hide the petting hand and re-enable the button
       setTimeout(() => {
@@ -185,6 +187,16 @@
         messageElement.textContent = 'The puppy is ready for more pets.';
       }, 10000); // 10000 milliseconds = 10 seconds
     });
+
+    // Function to sanitize user input
+    function sanitizeInput(input) {
+      // Remove any HTML tags
+      input = input.replace(/<[^>]*>?/gm, '');
+
+      // Limit the length of the message to prevent excessively long inputs
+      const maxLength = 200;
+      return input.substring(0, maxLength);
+    }
   </script>
 </body>
 </html>
